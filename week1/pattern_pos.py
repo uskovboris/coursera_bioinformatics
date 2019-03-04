@@ -33,6 +33,7 @@ def main():
 	print("pattern: %s" % pattern)
 
 	output = pattern_pos(chromosome, pattern)
+	print(output)
 	with open('./output.txt', "w") as f:
 		f.write(output)
 
