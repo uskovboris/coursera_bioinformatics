@@ -1,4 +1,5 @@
 import sys
+from fs_helpers import *
 
 
 def show_usage():
@@ -26,12 +27,11 @@ assert("0 2 4" == pattern_pos("ATA", "ATATATA"))
 
 def main():
     if len(sys.argv) != 2:
-        show_usage()
+        dataset_file = input("Dataset file:")
+    else:
+        dataset_file = sys.argv[1]
 
-    dataset_file = sys.argv[1]
-
-    with open(dataset_file) as f:
-        dataset = f.readlines()
+    dataset = read_lines(dataset_file)
 
     if len(dataset) != 2:
         print('Dataset should contains 2 lines')
@@ -42,12 +42,12 @@ def main():
 
     print("chromosome: %s" % chromosome)
     print("pattern: %s" % pattern)
+    output_path = input("Output file name:")
 
-    output = pattern_pos(chromosome, pattern)
-    print(output)
-    with open('./output.txt', "w") as f:
-        f.write(output)
+    result = pattern_pos(chromosome, pattern)
+    print(result)
+    write_file(output_path, result)
 
-#
-# if __name__ == '__main__':
-#     main()
+
+if __name__ == '__main__':
+    main()
