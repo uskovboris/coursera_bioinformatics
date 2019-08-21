@@ -16,12 +16,9 @@ def immediate_neighbours(pattern):
     neighbours = {pattern}
     for i in range(0, len(pattern)):
         for nucleotide in NUCLEOTIDES:
-            new_pattern = pattern[:i] + nucleotide + pattern[i+1:]
+            new_pattern = pattern[:i] + nucleotide + pattern[i + 1:]
             neighbours.add(new_pattern)
     return neighbours
-
-
-# print(immediate_neighbours('ACGT'))
 
 
 def neighbors(pattern, d):
@@ -39,3 +36,16 @@ def neighbors(pattern, d):
         else:
             neighborhood.add(pattern[:1] + neighbor)
     return neighborhood
+
+
+def iterative_neighbors(pattern, d):
+    neighborhood = {pattern}
+    for j in range(d):
+        for neighbor in neighborhood:
+            neighborhood = neighborhood.union(immediate_neighbours(neighbor))
+    return neighborhood
+
+
+def exact_neighbors(pattern, d):
+    neighborhood = neighbors(pattern, d)
+    return {p for p in neighborhood if hamming_dist(pattern, p) == d}
