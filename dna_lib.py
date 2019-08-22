@@ -121,3 +121,20 @@ def computing_frequencies_with_mismatches(text, k, d):
             j = pattern_to_number(approximate_pattern)
             frequency_array[j] += 1
     return frequency_array
+
+
+def skew(genome, i):
+    """
+    Compute Skewi+1(Genome) from Skewi(Genome) according to the nucleotide in position i of Genome. If this
+    nucleotide is G, then Skewi+1(Genome) = Skewi(Genome) + 1; if this nucleotide is C, then Skewi+1(Genome)= Skewi(
+    Genome) – 1; otherwise, Skewi+1(Genome) = Skewi(Genome).
+     :param genome: genome to compute the skew characteristics
+     :return: result skew
+    """
+    result = 0
+    for nucleotide in genome[:i]:
+        if nucleotide == 'G':
+            result += 1
+        elif nucleotide == 'C':
+            result -= 1
+    return result
