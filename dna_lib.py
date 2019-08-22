@@ -147,3 +147,26 @@ def skew(genome, i):
         elif nucleotide == 'C':
             result -= 1
     return result
+
+
+def __check_find_skew_minimums_params(genome):
+    if not genome:
+        raise ValueError("genome should not be an empty string")
+
+
+def find_skew_minimums(genome):
+    __check_find_skew_minimums_params(genome)
+    skews = dict({0: 0})
+    min_skew = len(genome)
+    for i, nucleotide in enumerate(genome):
+        if nucleotide == 'G':
+            skews[i + 1] = (skews[i] + 1)
+        elif nucleotide == 'C':
+            skews[i + 1] = (skews[i] - 1)
+        else:
+            skews[i + 1] = skews[i]
+
+        if min_skew > skews[i + 1]:
+            min_skew = skews[i + 1]
+
+    return [skew_i for skew_i in range(len(skews)) if skews[skew_i] == min_skew], skews

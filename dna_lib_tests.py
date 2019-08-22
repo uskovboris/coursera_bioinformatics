@@ -114,5 +114,42 @@ class SkewTest(unittest.TestCase):
         self.assertEqual(skew(pattern, 9), 1)
 
 
+class FindSkewMinimumsTest(unittest.TestCase):
+
+    def test_genome_is_empty(self):
+        with self.assertRaises(ValueError):
+            find_skew_minimums("")
+
+    def test_find_skew_minimum_dataset1(self):
+        """
+        The sample dataset is not actually run on your code
+        """
+        indexes, _ = find_skew_minimums("TAAAGACTGCCGAGAGGCCAACACGAGTGCTAGAACGAGGGGCGTAAACGCGGGTCCGAT")
+        self.assertSequenceEqual([11, 24], indexes)
+
+    def test_find_skew_minimum_indexing_is_off(self):
+        """
+        This dataset checks if your code’s indexing is off. Specifically, it verifies that your code
+        is not returning an index 1 too high (i.e. 4) or 1 too low (i.e. 2).
+        """
+        indexes, _ = find_skew_minimums("ACCG")
+        self.assertSequenceEqual([3], indexes)
+
+    def test_find_skew_minimum_check_last_symbol_in_genome(self):
+        """
+        This dataset checks to see if your code is missing the last symbol of Genome.
+        """
+        indexes, _ = find_skew_minimums("ACCC")
+        self.assertSequenceEqual([4], indexes)
+
+    def test_find_skew_minimum_check_there_is_minimum_not_maximum(self):
+        """
+        This dataset makes sure you’re not accidentally finding the maximum skew instead of the
+        minimum skew
+        """
+        indexes, _ = find_skew_minimums("CCGGGT")
+        self.assertSequenceEqual([2], indexes)
+
+
 if __name__ == "__main__":
     unittest.main()
