@@ -8,7 +8,7 @@ class CheckNucleotideTest(unittest.TestCase):
         """ Check A """
         self.assertTrue(check_nucleotide("A"), "Adenine is nucleotide")
 
-    def test_check_nucleotide_timin_ok(self):
+    def test_check_nucleotide_thymine_ok(self):
         """ Check T """
         self.assertTrue(check_nucleotide("T"), "Timin is nucleotide")
 
@@ -72,6 +72,46 @@ class IterativeNeighboursTest(unittest.TestCase):
         """ neighbours test """
         self.assertSetEqual(iterative_neighbors('ACG', 1), {'CCG', 'TCG', 'GCG', 'AAG', 'ATG', 'AGG', 'ACA', 'ACC', 'ACT', 'ACG'})
         self.assertSetEqual(iterative_neighbors('CAA', 1), {'CAA', 'CCA', 'CGA', 'CTA', 'CAC', 'CAG', 'CAT', 'AAA', 'CAA', 'GAA', 'TAA'})
+
+
+class SkewTest(unittest.TestCase):
+
+    def test_skew_i_empty(self):
+        with self.assertRaises(ValueError):
+            skew("", 0)
+
+    def test_skew_i_less_then_0(self):
+        with self.assertRaises(ValueError):
+            skew("ATCG", -1)
+
+    def test_skew_i_equal_0(self):
+        self.assertEqual(skew("CATGGGCATCGGCCATACGCC", 0), 0)
+
+    def test_skew_cytosine(self):
+        self.assertEqual(skew("C", 1), -1)
+
+    def test_skew_guanine(self):
+        self.assertEqual(skew("G", 1), 1)
+
+    def test_skew_adenine(self):
+        self.assertEqual(skew("GA", 2), 1)
+
+    def test_skew_thymine(self):
+        self.assertEqual(skew("GT", 2), 1)
+
+    def test_check_nucleotide_adenine_ok(self):
+        """ Complex test"""
+        pattern = "CATGGGCATCGGCCATACGCC"
+        self.assertEqual(skew(pattern, 0), 0)
+        self.assertEqual(skew(pattern, 1), -1)
+        self.assertEqual(skew(pattern, 2), -1)
+        self.assertEqual(skew(pattern, 3), -1)
+        self.assertEqual(skew(pattern, 4), 0)
+        self.assertEqual(skew(pattern, 5), 1)
+        self.assertEqual(skew(pattern, 6), 2)
+        self.assertEqual(skew(pattern, 7), 1)
+        self.assertEqual(skew(pattern, 8), 1)
+        self.assertEqual(skew(pattern, 9), 1)
 
 
 if __name__ == "__main__":

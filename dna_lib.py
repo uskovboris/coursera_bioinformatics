@@ -123,14 +123,23 @@ def computing_frequencies_with_mismatches(text, k, d):
     return frequency_array
 
 
+def __check_skew_params(genome, i):
+    if i < 0:
+        raise ValueError("i should be greater or equal to 0")
+    if not genome:
+        raise ValueError("genome should not be an empty string")
+
+
 def skew(genome, i):
     """
     Compute Skewi+1(Genome) from Skewi(Genome) according to the nucleotide in position i of Genome. If this
     nucleotide is G, then Skewi+1(Genome) = Skewi(Genome) + 1; if this nucleotide is C, then Skewi+1(Genome)= Skewi(
     Genome) – 1; otherwise, Skewi+1(Genome) = Skewi(Genome).
+     :param i: position, calculate skew till
      :param genome: genome to compute the skew characteristics
      :return: result skew
     """
+    __check_skew_params(genome, i)
     result = 0
     for nucleotide in genome[:i]:
         if nucleotide == 'G':
