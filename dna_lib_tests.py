@@ -8,20 +8,20 @@ class CheckNucleotideTest(unittest.TestCase):
         """ Check A """
         self.assertTrue(check_nucleotide("A"), "Adenine is nucleotide")
 
-        def test_check_nucleotide_timin_ok(self):
-            """ Check T """
+    def test_check_nucleotide_timin_ok(self):
+        """ Check T """
         self.assertTrue(check_nucleotide("T"), "Timin is nucleotide")
 
-        def test_check_nucleotide_cytosine_ok(self):
-            """ Check C """
+    def test_check_nucleotide_cytosine_ok(self):
+        """ Check C """
         self.assertTrue(check_nucleotide("C"), "Cytosine is nucleotide")
 
-        def test_check_nucleotide_guanine_ok(self):
-            """ Check G """
+    def test_check_nucleotide_guanine_ok(self):
+        """ Check G """
         self.assertTrue(check_nucleotide("G"), "Guanine is nucleotide")
 
-        def test_check_nucleotide_guanine_ok(self):
-            """ Check not-existed nucleotide """
+    def test_check_nucleotide_guanine_ok(self):
+        """ Check not-existed nucleotide """
         self.assertFalse(check_nucleotide("Y"), "Y is not nucleotide")
 
 
@@ -40,7 +40,6 @@ class ReadFileTest(unittest.TestCase):
 
     def test_hamming_dist_strings(self):
         self.assertEqual(hamming_dist("GGGCCGTTGGT", "GGACCGTTGAC"), 3)
-
 
 
 class NeighboursTest(unittest.TestCase):
