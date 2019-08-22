@@ -115,12 +115,22 @@ def computing_frequencies_with_mismatches(text, k, d):
     frequency_array = dict()
     frequency_array.setdefault(0)
     for i in range(0, len(text)-k):
-        pattern = text[i, k]
+        pattern = text[i, i+k]
         pattern_neighbourhood = neighbors(pattern, d)
         for approximate_pattern in pattern_neighbourhood:
             j = pattern_to_number(approximate_pattern)
             frequency_array[j] += 1
     return frequency_array
+
+
+def approximate_patterns_count(text, pattern, d):
+    count = 0
+    pattern_len = len(pattern)
+    for i in range(len(text)-pattern_len+1):
+        current_pattern = text[i:i+pattern_len]
+        if hamming_dist(current_pattern, pattern) <= d:
+            count += 1
+    return count
 
 
 def __check_skew_params(genome, i):

@@ -151,5 +151,28 @@ class FindSkewMinimumsTest(unittest.TestCase):
         self.assertSequenceEqual([2], indexes)
 
 
+class ApproximatePatternsCountTest(unittest.TestCase):
+
+    def test_approximate_patterns_count(self):
+        """
+        The sample dataset is not actually run on your code.
+        """
+        self.assertEqual(approximate_patterns_count("TTTAGAGCCTTCAGAGG", "GAGG", 2), 4)
+
+    def test_approximate_patterns_overlapping(self):
+        """
+        Checks that function is correctly handling overlapping occurrences (i.e. returning 2 instead of 1).
+        """
+        self.assertEqual(approximate_patterns_count("AAA", "AA", 0), 2)
+
+    def test_approximate_patterns_handling_patterns_with_less_then_d_mismatches(self):
+        """
+        This dataset checks if your code is allowing occurrences with less than d mismatches
+        (which it should). It is a common mistake to only allow occurrences with exactly d mismatches,
+        whereas we want all occurrences with less than or equal to d mismatches.
+        """
+        self.assertEqual(approximate_patterns_count("ATA", "ATA", 1), 1)
+
+
 if __name__ == "__main__":
     unittest.main()
