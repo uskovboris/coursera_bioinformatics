@@ -55,7 +55,8 @@ class NeighboursTest(unittest.TestCase):
     def test_neighbours(self):
         """ neighbours test """
         self.assertSetEqual(neighbors('ACG', 1), {'CCG', 'TCG', 'GCG', 'AAG', 'ATG', 'AGG', 'ACA', 'ACC', 'ACT', 'ACG'})
-        self.assertSetEqual(neighbors('CAA', 1), {'CAA', 'CCA', 'CGA', 'CTA', 'CAC', 'CAG', 'CAT', 'AAA', 'CAA', 'GAA', 'TAA'})
+        self.assertSetEqual(neighbors('CAA', 1),
+                            {'CAA', 'CCA', 'CGA', 'CTA', 'CAC', 'CAG', 'CAT', 'AAA', 'CAA', 'GAA', 'TAA'})
 
 
 class IterativeNeighboursTest(unittest.TestCase):
@@ -70,8 +71,10 @@ class IterativeNeighboursTest(unittest.TestCase):
 
     def test_neighbours(self):
         """ neighbours test """
-        self.assertSetEqual(iterative_neighbors('ACG', 1), {'CCG', 'TCG', 'GCG', 'AAG', 'ATG', 'AGG', 'ACA', 'ACC', 'ACT', 'ACG'})
-        self.assertSetEqual(iterative_neighbors('CAA', 1), {'CAA', 'CCA', 'CGA', 'CTA', 'CAC', 'CAG', 'CAT', 'AAA', 'CAA', 'GAA', 'TAA'})
+        self.assertSetEqual(iterative_neighbors('ACG', 1),
+                            {'CCG', 'TCG', 'GCG', 'AAG', 'ATG', 'AGG', 'ACA', 'ACC', 'ACT', 'ACG'})
+        self.assertSetEqual(iterative_neighbors('CAA', 1),
+                            {'CAA', 'CCA', 'CGA', 'CTA', 'CAC', 'CAG', 'CAT', 'AAA', 'CAA', 'GAA', 'TAA'})
 
 
 class SkewTest(unittest.TestCase):
@@ -172,6 +175,96 @@ class ApproximatePatternsCountTest(unittest.TestCase):
         whereas we want all occurrences with less than or equal to d mismatches.
         """
         self.assertEqual(approximate_patterns_count("ATA", "ATA", 1), 1)
+
+
+class PatternPositionsTest(unittest.TestCase):
+
+    def test_patterns_positions_check_several_occurrences(self):
+        self.assertSequenceEqual([1, 3, 9], pattern_positions("ATAT", "GATATATGCATATACTT"))
+
+    def test_patterns_positions_sample2(self):
+        self.assertSequenceEqual([4], pattern_positions("ACAC", "TTTTACACTTTTTTGTGTAAAAA"))
+
+    def test_patterns_positions_check_at_begin(self):
+        self.assertSequenceEqual([0, 46, 51, 74], pattern_positions("AAA",
+                                                                    "AAAGAGTGTCTGATAGCAGCTTCTGAACTGGTTACCTGCCGTGAGTAAATTAAATTTTATTGACTTAGGTCACTAAATACTTTAACCAATATAGGCATAGCGCACAGACAGATAATAATTACAGAGTACACAACATCCAT"))
+
+    def test_patterns_positions_check_tail(self):
+        self.assertSequenceEqual([88, 92, 98, 132], pattern_positions("TTT",
+                                                                      "AGCGTGCCGAAATATGCCGCCAGACCTGCTGCGGTGGCCTCGCCGACTTCACGGATGCCAAGTGCATAGAGGAAGCGAGCAAAGGTGGTTTCTTTCGCTTTATCCAGCGCGTTAACCACGTTCTGTGCCGACTTT"))
+
+    def test_patterns_positions_check_overlapping(self):
+        self.assertSequenceEqual([0, 2, 4], pattern_positions("ATA", "ATATATA"))
+
+
+class ApproximatePatternPositionsTest(unittest.TestCase):
+
+    def test_approximate_pattern_positions(self):
+        """
+        The sample dataset is not actually run on your code
+        """
+        self.assertSequenceEqual([6, 7, 26, 27], approximate_pattern_positions("ATTCTGGA",
+                                                                               "CGCCCGAATCCAGAACGCATTCCCATATTTCGGGACCACTGGCCTCCACGGTACGGACGTCAATCAAAT",
+                                                                               3))
+
+    def test_approximate_patterns_handling_patterns_with_exactly_equals_d_mismatches(self):
+        """
+        This dataset checks if you are only counting instances where the number of mismatches is
+        exactly equal to d (i.e. ignoring instances where mismatch < d).
+        """
+        self.assertSequenceEqual([4, 5, 6, 7, 8, 11, 12, 13, 14, 15],
+                                 approximate_pattern_positions("AAA", "TTTTTTAAATTTTAAATTTTTT", 2))
+
+    def test_approximate_patterns_handling_patterns_check_begin(self):
+        """
+        This dataset checks if your code has an off-by-one error at the beginning of Text (i.e. your
+        code is not checking the the leftmost substring of Text).
+        """
+        self.assertSequenceEqual([0, 30, 66],
+                                 approximate_pattern_positions("GAGCGCTGG",
+                                                               "GAGCGCTGGGTTAACTCGCTACTTCCCGACGAGCGCTGTGGCGCAAATTGGCGATGAAACTGCAGAGAGAACTGGTCATCCAACTGAATTCTCCCCGCTATCGCATTTTGATGCGCGCCGCGTCGATT",
+                                                               2))
+
+    def test_approximate_patterns_handling_patterns_check_end(self):
+        """
+        This dataset checks if your code has an off-by-one error at the end of Text (i.e. your code
+        is not checking the the rightmost substring of Text).
+        """
+        self.assertSequenceEqual([3, 36, 74, 137],
+                                 approximate_pattern_positions("AATCCTTTCA",
+                                                               "CCAAATCCCCTCATGGCATGCATTCCCGCAGTATTTAATCCTTTCATTCTGCATATAAGTAGTGAAGGTATAGAAACCCGTTCAAGCCCGCAGCGGTAAAACCGAGAACCATGATGAATGCACGGCGATTGCGCCATAATCCAAACA",
+                                                               3))
+
+    def test_approximate_patterns_handling_patterns_check_overlapping(self):
+        """
+        This dataset checks if your code is correctly accounting for overlapping instances of
+        Pattern in Text.
+        """
+
+        self.assertSequenceEqual([0, 7, 36, 44, 48, 72, 79, 112],
+                                 approximate_pattern_positions("CCGTCATCC",
+                                                               "CCGTCATCCGTCATCCTCGCCACGTTGGCATGCATTCCGTCATCCCGTCAGGCATACTTCTGCATATAAGTACAAACATCCGTCATGTCAAAGGGAGCCCGCAGCGGTAAAACCGAGAACCATGATGAATGCACGGCGATTGC",
+                                                               3))
+
+    def test_approximate_patterns_handling_patterns_with_less_then_d_mismatches(self):
+        """
+        This dataset checks if you are only counting instances of Pattern with less than d
+        mismatches (as opposed to instances of Pattern with less than or equal to d mismatches).
+        """
+        self.assertSequenceEqual([0, 1, 2, 3],
+                                 approximate_pattern_positions("TTT",
+                                                               "AAAAAA",
+                                                               3))
+
+    def test_approximate_patterns_handling_patterns_with_d_equals_0(self):
+        """
+        This dataset checks if your code works with input where d = 0 (i.e. only perfect matches
+        are allowed).
+        """
+        self.assertSequenceEqual([0],
+                                 approximate_pattern_positions("CCA",
+                                                               "CCACCT",
+                                                               0))
 
 
 if __name__ == "__main__":

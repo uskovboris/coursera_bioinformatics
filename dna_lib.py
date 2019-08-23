@@ -42,7 +42,7 @@ def number_to_pattern(index, k):
     return prefix_pattern + nucleotide
 
 
-def format_frequencies_result(arr):
+def format_list_result(arr):
     result = ''
     for item in arr:
         result += format('%d ' % item)
@@ -180,3 +180,21 @@ def find_skew_minimums(genome):
             min_skew = skews[i + 1]
 
     return [skew_i for skew_i in range(len(skews)) if skews[skew_i] == min_skew], skews
+
+
+def __pattern_positions_internal(pattern, chromosome, matcher):
+    result = []
+    pattern_len = len(pattern)
+    for i in range(len(chromosome) - pattern_len + 1):
+        if matcher(chromosome[i:i + pattern_len], pattern):
+            result.append(i)
+    return result
+
+
+def pattern_positions(pattern, chromosome):
+    return __pattern_positions_internal(pattern, chromosome, lambda str1, str2: str1 == str2)
+
+
+def approximate_pattern_positions(pattern, chromosome, d):
+    return __pattern_positions_internal(pattern, chromosome, lambda str1, str2: hamming_dist(str1, str2) <= d)
+
