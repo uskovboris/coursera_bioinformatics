@@ -1,18 +1,29 @@
 VARIETY = 4
 
-NUCLEOTIDES = ['A', 'C', 'G', 'T']
+DNA_NUCLEOTIDES = ['A', 'C', 'G', 'T']
+RNA_NUCLEOTIDES = ['A', 'C', 'G', 'U']
 
 
-def check_nucleotide(nucleotide):
-    return nucleotide in NUCLEOTIDES
+def check_nucleotide(nucleotide, RNA=False):
+    return nucleotide in DNA_NUCLEOTIDES if not RNA else RNA_NUCLEOTIDES
 
 
-def nucleotide_to_number(nucleotide):
-    return NUCLEOTIDES.index(nucleotide)
+def nucleotide_to_number(nucleotide, RNA=False):
+    if not RNA:
+        if check_nucleotide(nucleotide):
+            return DNA_NUCLEOTIDES.index(nucleotide)
+        else:
+            raise ValueError("Invalid for DNA nucleotide '{}'".format(nucleotide))
+
+    elif RNA:
+        if check_nucleotide(nucleotide, RNA=True):
+            return RNA_NUCLEOTIDES.index(nucleotide)
+        else:
+            raise ValueError("Invalid for DNA nucleotide '{}'".format(nucleotide))
 
 
-def number_to_nucleotide(number):
-    return NUCLEOTIDES[number]
+def number_to_nucleotide(number, RNA=False):
+    return DNA_NUCLEOTIDES[number] if not RNA else RNA_NUCLEOTIDES[number]
 
 
 def pattern_to_number(pattern):
@@ -22,7 +33,7 @@ def pattern_to_number(pattern):
     nucleotide = pattern[-1]
 
     if not check_nucleotide(nucleotide):
-        raise ValueError(format("Invalid nucleotide %s" % nucleotide))
+        raise ValueError("Invalid nucleotide {}".format(nucleotide))
 
     reminder = nucleotide_to_number(nucleotide)
     quotient = pattern[:-1]
@@ -45,7 +56,7 @@ def number_to_pattern(index, k):
 def format_list_result(arr):
     result = ''
     for item in arr:
-        result += format('%d ' % item)
+        result += '{} '.format(item)
     return result.strip()
 
 
@@ -75,27 +86,27 @@ def hamming_dist(seq1, seq2):
 def immediate_neighbours(pattern):
     neighbours = {pattern}
     for i in range(0, len(pattern)):
-        for nucleotide in NUCLEOTIDES:
+        for nucleotide in DNA_NUCLEOTIDES:
             new_pattern = pattern[:i] + nucleotide + pattern[i + 1:]
             neighbours.add(new_pattern)
-    return neighbours
+    return list(neighbours)
 
 
 def neighbors(pattern, d):
     if d == 0:
-        return {pattern}
+        return [pattern]
     if len(pattern) == 1:
-        return set(NUCLEOTIDES)
+        return DNA_NUCLEOTIDES
     neighborhood = set()
     suffix = pattern[1:]
     suffix_neighbors = neighbors(suffix, d)
     for neighbor in suffix_neighbors:
         if hamming_dist(suffix, neighbor) < d:
-            for nucleotide in NUCLEOTIDES:
+            for nucleotide in DNA_NUCLEOTIDES:
                 neighborhood.add(nucleotide + neighbor)
         else:
             neighborhood.add(pattern[:1] + neighbor)
-    return neighborhood
+    return list(neighborhood)
 
 
 def iterative_neighbors(pattern, d):
@@ -103,24 +114,31 @@ def iterative_neighbors(pattern, d):
     for j in range(d):
         for neighbor in neighborhood:
             neighborhood = neighborhood.union(immediate_neighbours(neighbor))
-    return neighborhood
+    return list(neighborhood)
 
 
 def exact_neighbors(pattern, d):
     neighborhood = neighbors(pattern, d)
-    return {p for p in neighborhood if hamming_dist(pattern, p) == d}
+    return [p for p in neighborhood if hamming_dist(pattern, p) == d]
 
 
 def computing_frequencies_with_mismatches(text, k, d):
-    frequency_array = dict()
-    frequency_array.setdefault(0)
+    n = 4 ** k
+    frequency_array = [0] * n
     for i in range(0, len(text)-k):
-        pattern = text[i, i+k]
+        pattern = text[i: i+k]
         pattern_neighbourhood = neighbors(pattern, d)
         for approximate_pattern in pattern_neighbourhood:
             j = pattern_to_number(approximate_pattern)
             frequency_array[j] += 1
     return frequency_array
+
+
+def computing_frequent_patterns_with_mismatches(text, k, d):
+    frequency_dict = computing_frequencies_with_mismatches(text, k, d)
+
+    max_frequency = max(frequency_dict)
+    return [number_to_pattern(i, k) for i, val in enumerate(frequency_dict) if (val == max_frequency)]
 
 
 def approximate_patterns_count(text, pattern, d):
@@ -197,4 +215,3 @@ def pattern_positions(pattern, chromosome):
 
 def approximate_pattern_positions(pattern, chromosome, d):
     return __pattern_positions_internal(pattern, chromosome, lambda str1, str2: hamming_dist(str1, str2) <= d)
-

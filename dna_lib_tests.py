@@ -2,6 +2,33 @@ import unittest
 from dna_lib import *
 
 
+class NucleotideToNumberTest(unittest.TestCase):
+
+    def test_dna_adenine_to_number(self):
+        self.assertEqual(nucleotide_to_number('A'), 0)
+
+    def test_dna_thymine_to_number(self):
+        self.assertEqual(nucleotide_to_number('T'), 3)
+
+    def test_dna_cytosine_to_number(self):
+        self.assertEqual(nucleotide_to_number('C'), 1)
+
+    def test_dna_guanine_to_number(self):
+        self.assertEqual(nucleotide_to_number('G'), 2)
+
+    def test_rna_adenine_to_number(self):
+        self.assertEqual(nucleotide_to_number('A', RNA=True), 0)
+
+    def test_rna_uracile_to_number(self):
+        self.assertEqual(nucleotide_to_number('U', RNA=True), 3)
+
+    def test_rna_cytosine_to_number(self):
+        self.assertEqual(nucleotide_to_number('C', RNA=True), 1)
+
+    def test_rna_guanine_to_number(self):
+        self.assertEqual(nucleotide_to_number('G', RNA=True), 2)
+
+
 class CheckNucleotideTest(unittest.TestCase):
 
     def test_check_nucleotide_adenine_ok(self):
@@ -46,35 +73,36 @@ class NeighboursTest(unittest.TestCase):
 
     def test_neighbours_d_equals_0(self):
         """d=0 test"""
-        self.assertSetEqual(neighbors('ACG', 0), {"ACG"})
+        self.assertSequenceEqual(neighbors('ACG', 0), ["ACG"])
 
     def test_neighbours_len_equals_1(self):
         """1 nucleotide len DNA test"""
-        self.assertSetEqual(neighbors('A', 1), {"A", "T", "C", "G"})
+        self.assertSequenceEqual(sorted(neighbors('A', 1)), sorted(["A", "T", "C", "G"]))
 
     def test_neighbours(self):
         """ neighbours test """
-        self.assertSetEqual(neighbors('ACG', 1), {'CCG', 'TCG', 'GCG', 'AAG', 'ATG', 'AGG', 'ACA', 'ACC', 'ACT', 'ACG'})
-        self.assertSetEqual(neighbors('CAA', 1),
-                            {'CAA', 'CCA', 'CGA', 'CTA', 'CAC', 'CAG', 'CAT', 'AAA', 'CAA', 'GAA', 'TAA'})
+        self.assertSequenceEqual(sorted(neighbors('ACG', 1)),
+                                 sorted(['CCG', 'TCG', 'GCG', 'AAG', 'ATG', 'AGG', 'ACA', 'ACC', 'ACT', 'ACG']))
+        self.assertSequenceEqual(sorted(neighbors('CAA', 1)),
+                                 sorted(['CAA', 'CCA', 'CGA', 'CTA', 'CAC', 'CAG', 'CAT', 'AAA', 'GAA', 'TAA']))
 
 
 class IterativeNeighboursTest(unittest.TestCase):
 
     def test_neighbours_d_equals_0(self):
         """d=0 test"""
-        self.assertSetEqual(iterative_neighbors('ACG', 0), {"ACG"})
+        self.assertSequenceEqual(sorted(iterative_neighbors('ACG', 0)), sorted(["ACG"]))
 
     def test_neighbours_len_equals_1(self):
         """1 nucleotide len DNA test"""
-        self.assertSetEqual(iterative_neighbors('A', 1), {"A", "T", "C", "G"})
+        self.assertSequenceEqual(sorted(iterative_neighbors('A', 1)), sorted(["A", "T", "C", "G"]))
 
     def test_neighbours(self):
         """ neighbours test """
-        self.assertSetEqual(iterative_neighbors('ACG', 1),
-                            {'CCG', 'TCG', 'GCG', 'AAG', 'ATG', 'AGG', 'ACA', 'ACC', 'ACT', 'ACG'})
-        self.assertSetEqual(iterative_neighbors('CAA', 1),
-                            {'CAA', 'CCA', 'CGA', 'CTA', 'CAC', 'CAG', 'CAT', 'AAA', 'CAA', 'GAA', 'TAA'})
+        self.assertSequenceEqual(sorted(iterative_neighbors('ACG', 1)),
+                                 sorted(['CCG', 'TCG', 'GCG', 'AAG', 'ATG', 'AGG', 'ACA', 'ACC', 'ACT', 'ACG']))
+        self.assertSequenceEqual(sorted(iterative_neighbors('CAA', 1)),
+                                 sorted(['CAA', 'CCA', 'CGA', 'CTA', 'CAC', 'CAG', 'CAT', 'AAA', 'GAA', 'TAA']))
 
 
 class SkewTest(unittest.TestCase):
@@ -265,6 +293,13 @@ class ApproximatePatternPositionsTest(unittest.TestCase):
                                  approximate_pattern_positions("CCA",
                                                                "CCACCT",
                                                                0))
+
+
+class ComputingFrequentPatternsWithMismatchesTest(unittest.TestCase):
+
+    def test_computing_frequent_patterns_with_mismatches_case1(self):
+        self.assertSequenceEqual(["ATGC", "ATGT", "GATG"],
+                                 computing_frequent_patterns_with_mismatches("ACGTTGCATGTCGCATGATGCATGAGAGCT", 4, 1))
 
 
 if __name__ == "__main__":
