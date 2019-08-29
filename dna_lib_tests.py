@@ -298,8 +298,48 @@ class ApproximatePatternPositionsTest(unittest.TestCase):
 class ComputingFrequentPatternsWithMismatchesTest(unittest.TestCase):
 
     def test_computing_frequent_patterns_with_mismatches_case1(self):
-        self.assertSequenceEqual(["ATGC", "ATGT", "GATG"],
-                                 computing_frequent_patterns_with_mismatches("ACGTTGCATGTCGCATGATGCATGAGAGCT", 4, 1))
+        self.assertSequenceEqual(sorted(["ATGC", "ATGT", "GATG"]),
+                                 sorted(computing_frequent_patterns_with_mismatches("ACGTTGCATGTCGCATGATGCATGAGAGCT", 4, 1)))
+
+    def test_computing_frequent_patterns_with_mismatches_check_kmers_not_Presented_in_text(self):
+        """
+        This dataset checks that your code includes k-mers that do not actually appear in Text.
+        Notice here that, although none of the output k-mers except for AA actually appear in Text, they
+        are all valid because they appear in Text with up to 1 mismatch (i.e. 0 or 1 mismatch).
+        """
+        self.assertSequenceEqual(sorted(["AA", "AC", "AG", "CA", "AT", "GA", "TA"]),
+                                 sorted(computing_frequent_patterns_with_mismatches("AAAAAAAAAA", 2, 1)))
+
+    def test_computing_frequent_patterns_with_mismatches_check_k_d_positions(self):
+        """
+        This dataset makes sure that your code is not accidentally swapping k and d.
+        """
+        self.assertSequenceEqual(sorted(['AAGC', 'AATT', 'ACAC', 'ACTG', 'AGAG', 'AGCA', 'AGGT', 'ATCC', 'ATTA', 'CATC', 'CGGC', 'CGTT', 'GGCC', 'GGTA', 'GTTC', 'TCTC', 'TGAC', 'TGTG']),
+                                 sorted(computing_frequent_patterns_with_mismatches("AGTCAGTC", 4, 2)))
+
+    def test_computing_frequent_patterns_with_mismatches_check_that_not_in_reverse_complement(self):
+        """
+        This dataset makes sure you are not finding patterns in the Reverse Complement of Text
+        """
+        self.assertSequenceEqual(sorted(["GGTA"]),
+                                 sorted(computing_frequent_patterns_with_mismatches("AATTAATTGGTAGGTAGGTA", 4, 0)))
+
+    def test_computing_frequent_patterns_with_mismatches_check_that_patterns_with_less_or_equals_d_mismatches(self):
+        """
+        This dataset first checks that k-mers with exactly d mismatches are being found. Then, it
+        checks that k-mers with less than d mismatches are being allowed (i.e. you are not only allowing
+        k-mers with exactly d mismatches). Next, it checks that you are not returning too few k-mers.
+        Last, it checks that you are not returning too many k-mers
+        """
+        self.assertSequenceEqual(sorted(["GTA", "ACA", "AAA", "ATC", "ATA", "AGA", "ATT", "CTA", "TTA", "ATG"]),
+                                 sorted(computing_frequent_patterns_with_mismatches("ATA", 3, 1)))
+
+    def test_computing_frequent_patterns_with_mismatches_check_not_in_reverse_complement(self):
+        """
+        This dataset checks that your code is not looking for k-mers in the Reverse Complement of Text.
+        """
+        self.assertSequenceEqual(sorted(["AAT"]),
+                                 sorted(computing_frequent_patterns_with_mismatches("AAT", 3, 0)))
 
 
 if __name__ == "__main__":
