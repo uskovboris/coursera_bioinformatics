@@ -125,7 +125,7 @@ def exact_neighbors(pattern, d):
 def computing_frequencies_with_mismatches(text, k, d):
     n = 4 ** k
     frequency_array = [0] * n
-    for i in range(0, len(text)-k):
+    for i in range(0, len(text)-k+1):
         pattern = text[i: i+k]
         pattern_neighbourhood = neighbors(pattern, d)
         for approximate_pattern in pattern_neighbourhood:
