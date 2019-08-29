@@ -134,6 +134,28 @@ def computing_frequencies_with_mismatches(text, k, d):
     return frequency_array
 
 
+def reverse_complement(template_strand, RNA=False):
+    complement_strand = ""
+    for nucleotide in template_strand:
+        if nucleotide == 'A':
+            complement_strand = 'T' + complement_strand
+        elif nucleotide == 'T':
+            if RNA:
+                complement_strand = 'U' + complement_strand
+            else:
+                complement_strand = 'A' + complement_strand
+        elif nucleotide == 'G':
+            complement_strand = 'C' + complement_strand
+        elif nucleotide == 'C':
+            complement_strand = 'G' + complement_strand
+        elif nucleotide == 'U':
+            if RNA:
+                complement_strand = 'T' + complement_strand
+            else:
+                raise ValueError("Invalid for DNA nucleotide '{}'".format(nucleotide))
+    return complement_strand
+
+
 def computing_frequent_patterns_with_mismatches(text, k, d):
     frequency_dict = computing_frequencies_with_mismatches(text, k, d)
 
