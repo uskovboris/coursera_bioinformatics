@@ -122,15 +122,18 @@ def exact_neighbors(pattern, d):
     return [p for p in neighborhood if hamming_dist(pattern, p) == d]
 
 
-def computing_frequencies_with_mismatches(text, k, d):
+def computing_frequencies_with_mismatches(text, k, d, with_complements=False):
     n = 4 ** k
     frequency_array = [0] * n
     for i in range(0, len(text)-k+1):
         pattern = text[i: i+k]
         pattern_neighbourhood = neighbors(pattern, d)
+        if with_complements:
+            pattern_reverse_complement = reverse_complement(pattern)
+            pattern_neighbourhood.extend(neighbors(pattern_reverse_complement, d))
         for approximate_pattern in pattern_neighbourhood:
-            j = pattern_to_number(approximate_pattern)
-            frequency_array[j] += 1
+            pattern_hash = pattern_to_number(approximate_pattern)
+            frequency_array[pattern_hash] += 1
     return frequency_array
 
 
@@ -156,8 +159,8 @@ def reverse_complement(template_strand, RNA=False):
     return complement_strand
 
 
-def computing_frequent_patterns_with_mismatches(text, k, d):
-    frequency_dict = computing_frequencies_with_mismatches(text, k, d)
+def computing_frequent_patterns_with_mismatches(text, k, d, with_complements=False):
+    frequency_dict = computing_frequencies_with_mismatches(text, k, d, with_complements)
 
     max_frequency = max(frequency_dict)
     return [number_to_pattern(i, k) for i, val in enumerate(frequency_dict) if (val == max_frequency)]

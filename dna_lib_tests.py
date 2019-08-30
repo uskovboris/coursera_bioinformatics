@@ -208,7 +208,6 @@ class ApproximatePatternsCountTest(unittest.TestCase):
         self.assertEqual(approximate_patterns_count("ACGTTGCATGTCGCATGATGCATGAGAGCT", "ATA", 1), 1)
 
 
-
 class PatternPositionsTest(unittest.TestCase):
 
     def test_patterns_positions_check_several_occurrences(self):
