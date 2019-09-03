@@ -1,3 +1,5 @@
+import math
+
 VARIETY = 4
 
 DNA_NUCLEOTIDES = ['A', 'C', 'G', 'T']
@@ -240,3 +242,7 @@ def pattern_positions(pattern, chromosome):
 
 def approximate_pattern_positions(pattern, chromosome, d):
     return __pattern_positions_internal(pattern, chromosome, lambda str1, str2: hamming_dist(str1, str2) <= d)
+
+
+def entropy(values):
+    return -sum([p*math.log(p, 2) for p in values])
