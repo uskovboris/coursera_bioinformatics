@@ -289,7 +289,7 @@ def motifs_enumeration(dna, k, d):
         pattern = complete_dna[i:i + k]
         neighborhood = neighbors(pattern, d)
         for approximate_pattern in neighborhood:
-            if all(hamming_dist_in(l, approximate_pattern, k, d) for l in dna):
+            if all(hamming_dist_in(cur_dna_chunk, approximate_pattern, k, d) for cur_dna_chunk in dna):
                 if approximate_pattern not in motifs:
                     motifs.append(approximate_pattern)
     return sorted(motifs)
