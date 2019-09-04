@@ -386,5 +386,40 @@ class ComputingFrequentPatternsWithMismatchesTest(unittest.TestCase):
                                  sorted(computing_frequent_patterns_with_mismatches("AAT", 3, 0, True)))
 
 
+class ComputingEntropyTest(unittest.TestCase):
+    def test_computing_entropy_more_then_1(self):
+        """Entropy smoke test"""
+        self.assertAlmostEqual(1.371, entropy([0.2, 0.6, 0.0, 0.2]), places=4)
+
+    def test_computing_entropy_smoke(self):
+        """Entropy smoke test"""
+        self.assertAlmostEqual(0.971, entropy([0.0, 0.6, 0.0, 0.4]), places=4)
+
+    def test_computing_entropy_max_val(self):
+        """Entropy smoke test"""
+        self.assertAlmostEqual(2.0, entropy([0.25, 0.25, 0.25, 0.25]))
+
+    def test_computing_entropy_min_val(self):
+        """Entropy smoke test"""
+        self.assertAlmostEqual(0.0, entropy([1.0]))
+
+
+class ComputingMatrixEntropyTest(unittest.TestCase):
+    def test_computing_matrix_entropy(self):
+        """Matrix entropy smoke test"""
+        entropy_val = matrix_entropy([
+            ['T', 'C', 'G', 'G', 'G', 'G', 'G', 'T', 'T', 'T', 'T', 'T'],
+            ['C', 'C', 'G', 'G', 'T', 'G', 'A', 'C', 'T', 'T', 'A', 'C'],
+            ['A', 'C', 'G', 'G', 'G', 'G', 'A', 'T', 'T', 'T', 'T', 'C'],
+            ['T', 'T', 'G', 'G', 'G', 'G', 'A', 'C', 'T', 'T', 'T', 'T'],
+            ['A', 'A', 'G', 'G', 'G', 'G', 'A', 'C', 'T', 'T', 'C', 'C'],
+            ['T', 'T', 'G', 'G', 'G', 'G', 'A', 'C', 'T', 'T', 'C', 'C'],
+            ['T', 'C', 'G', 'G', 'G', 'G', 'A', 'T', 'T', 'C', 'A', 'T'],
+            ['T', 'C', 'G', 'G', 'G', 'G', 'A', 'T', 'T', 'C', 'C', 'T'],
+            ['T', 'A', 'G', 'G', 'G', 'G', 'A', 'A', 'C', 'T', 'A', 'C'],
+            ['T', 'C', 'G', 'G', 'G', 'T', 'A', 'T', 'A', 'A', 'C', 'C']])
+        self.assertAlmostEqual(9.916290005356972, entropy_val)
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -1,4 +1,5 @@
-import math
+import collections
+import numpy
 
 VARIETY = 4
 
@@ -244,5 +245,16 @@ def approximate_pattern_positions(pattern, chromosome, d):
     return __pattern_positions_internal(pattern, chromosome, lambda str1, str2: hamming_dist(str1, str2) <= d)
 
 
-def entropy(values):
-    return -sum([p*math.log(p, 2) for p in values])
+def entropy(vector):
+    return -sum([p * numpy.math.log(p, 2) for p in vector if p > 0])
+
+
+def matrix_entropy(motif_matrix):
+    result = 0
+    motif_matrix = numpy.array(motif_matrix)
+    columns = motif_matrix.T
+    for column in columns:
+        counts = collections.Counter(column)
+        frequencies = [cnt/len(column) for cnt in counts.values()]
+        result += entropy(frequencies)
+    return result
