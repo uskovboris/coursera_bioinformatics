@@ -86,6 +86,15 @@ def hamming_dist(seq1, seq2):
     return dist
 
 
+def hamming_dist_in(cur_dna_chunk, pattern, k, d):
+    for j in range(0, len(cur_dna_chunk) - k + 1):
+        cur_pattern = cur_dna_chunk[j:j + k]
+        if hamming_dist(pattern, cur_pattern) <= d:
+            return True
+    else:
+        return False
+
+
 def immediate_neighbours(pattern):
     neighbours = {pattern}
     for i in range(0, len(pattern)):
@@ -246,10 +255,15 @@ def approximate_pattern_positions(pattern, chromosome, d):
 
 
 def entropy(vector):
+    """
+    A measure of the uncertainty of a probability distribution (p1, …, pN)
+    :param vector: vector to calculate an entropy
+    """
     return -sum([p * numpy.math.log(p, 2) for p in vector if p > 0])
 
 
 def matrix_entropy(motif_matrix):
+    """Calculates entropy of motifs matrix as a sum of entropies of the matrix columns"""
     result = 0
     motif_matrix = numpy.array(motif_matrix)
     columns = motif_matrix.T
@@ -258,3 +272,24 @@ def matrix_entropy(motif_matrix):
         frequencies = [cnt/len(column) for cnt in counts.values()]
         result += entropy(frequencies)
     return result
+
+
+def motifs_enumeration(dna, k, d):
+    """
+    Given a collection of strings Dna and an integer d, a k-mer is a (k,d)-motif if it appears in every string from Dna
+    with at most d mismatches. For example, the implanted 15-mer in the strings above represents a (15,4)-motif.
+    :param dna: the DNA strand to find motifs
+    :param k: expected motif length
+    :param d: hamming distance upper limit
+    :return: the list of found motifs
+    """
+    motifs = []
+    complete_dna = "".join(dna)
+    for i in range(0, len(complete_dna) - k + 1):
+        pattern = complete_dna[i:i + k]
+        neighborhood = neighbors(pattern, d)
+        for approximate_pattern in neighborhood:
+            if all(hamming_dist_in(l, approximate_pattern, k, d) for l in dna):
+                if approximate_pattern not in motifs:
+                    motifs.append(approximate_pattern)
+    return sorted(motifs)
