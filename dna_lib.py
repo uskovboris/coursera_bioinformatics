@@ -293,3 +293,20 @@ def motifs_enumeration(dna, k, d):
                 if approximate_pattern not in motifs:
                     motifs.append(approximate_pattern)
     return sorted(motifs)
+
+
+def distance_between_pattern_and_strings(pattern, dna):
+    k = len(pattern)
+    distance = 0
+    for cur_dna_chunk in dna:
+        min_hamming_dist = 1000000
+        for i in range(0, len(cur_dna_chunk) - k + 1):
+            cur_pattern = cur_dna_chunk[i:i + k]
+            cur_pattern_hamming_dist = hamming_dist(pattern, cur_pattern)
+            if cur_pattern_hamming_dist < min_hamming_dist:
+                min_hamming_dist = cur_pattern_hamming_dist
+        distance += min_hamming_dist
+    return distance
+
+
+

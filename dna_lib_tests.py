@@ -493,5 +493,65 @@ class MotifsEnumerationTest(unittest.TestCase):
                                  sorted(motifs_enumeration(dna, 3, 0)))
 
 
+class DistanceBetweenPatternAndStringsTest(unittest.TestCase):
+    def test_distance_between_pattern_and_strings_sample1(self):
+        """Smoke test"""
+        dna = ["TTACCTTAAC", "GATATCTGTC", "ACGGCGTTCG", "CCCTAAAGAG", "CGTCAGAGGT"]
+        self.assertEqual(5, distance_between_pattern_and_strings("AAA", dna))
+
+    def test_distance_between_pattern_and_strings_sample2(self):
+        """
+        This dataset checks multiple potential mistakes.
+
+        * First, it checks that you are actually using all three sequences of Dna (and not just a
+        single sequence). The Hamming Distance between Pattern and each individual sequence in Dna
+        is 1, so if your code returns a total score of 1, we fail it for this reason.
+
+        * Next, it checks if you are only using the first k-mer in each sequence of Dna. For
+        example, if you do this, you would output d(TAA,TTT) + d(TAA,CCT) + d(TAA,GGT) which is
+        8, instead of the correct answer of 3.
+
+        * Finally, it checks if you are only using the last k-mer in each sequence of Dna. For example, if
+        you do this, you would output d(TAA,TTT) + d(TAA,CAC) + d(TAA,GAG) which is 6, instead
+        of the correct answer of 3.
+        """
+        dna = ["TTTATTT", "CCTACAC", "GGTAGAG"]
+        self.assertEqual(3, distance_between_pattern_and_strings("TAA", dna))
+
+    def test_distance_between_pattern_and_strings_check_uses_min(self):
+        """
+        This dataset checks if your code is using “max” or “sum” instead of “min”.
+
+        * First, it checks if your code is using “max” instead of “min”. In this case, the output
+        would be d(AAA,ACT) + d(AAA,AAC) + d(AAA,AAG), which is 4, instead of the correct
+        answer of 0.
+
+        * Next, it checks if your code is using “sum” instead of “min”. In this case, the output would be
+        d(AAA,AAA) + d(AAA,AAC) + d(AAA,ACT) + d(AAA,AAA) + d(AAA,AAC) +
+        d(AAA,AAA) + d(AAA,AAG), which is 5, instead of the correct answer of 0.
+        """
+        dna = ["AAACT", "AAAC", "AAAG"]
+        self.assertEqual(0, distance_between_pattern_and_strings("AAA", dna))
+
+    def test_distance_between_pattern_and_strings_check_side_by_side_error_at_the_end(self):
+        """
+        This dataset checks if your code has an off-by-one error at the end of each sequence of Dna.
+        Notice that each sequence has a perfect match of “AAA” at the very end, so if your code returns
+        a nonzero answer to this test dataset, it must have missed the last k-mer of each.
+        """
+        dna = ["TTTTAAA", "CCCCAAA", "GGGGAAA"]
+        self.assertEqual(0, distance_between_pattern_and_strings("AAA", dna))
+
+    def test_distance_between_pattern_and_strings_check_side_by_side_error_at_the_beggining(self):
+        """
+        This dataset checks if your code has an off-by-one error at the beginning of each
+        sequence of Dna. Notice that each sequence has a perfect match of “AAA” at the very beginning,
+        so if your code returns a nonzero answer to this test dataset, it must have missed the first k-mer
+        of each.
+        """
+        dna = ["AAATTTT", "AAACCCC", "AAAGGGG"]
+        self.assertEqual(0, distance_between_pattern_and_strings("AAA", dna))
+
+
 if __name__ == "__main__":
     unittest.main()
