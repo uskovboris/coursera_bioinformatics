@@ -1,3 +1,4 @@
+import sys
 import collections
 import numpy
 
@@ -299,7 +300,7 @@ def distance_between_pattern_and_strings(pattern, dna):
     k = len(pattern)
     distance = 0
     for cur_dna_chunk in dna:
-        min_hamming_dist = 1000000
+        min_hamming_dist = 100000
         for i in range(0, len(cur_dna_chunk) - k + 1):
             cur_pattern = cur_dna_chunk[i:i + k]
             cur_pattern_hamming_dist = hamming_dist(pattern, cur_pattern)
@@ -309,4 +310,15 @@ def distance_between_pattern_and_strings(pattern, dna):
     return distance
 
 
+def median_string(dna, k):
+    n = 4 ** k
+    patterns = [number_to_pattern(i, k) for i in range(0, n)]
 
+    median = ""
+    distance = 100000
+    for pattern in patterns:
+        cur_pattern_distance = distance_between_pattern_and_strings(pattern, dna)
+        if distance > cur_pattern_distance:
+            distance = cur_pattern_distance
+            median = pattern
+    return median

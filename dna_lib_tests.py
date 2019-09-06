@@ -553,5 +553,11 @@ class DistanceBetweenPatternAndStringsTest(unittest.TestCase):
         self.assertEqual(0, distance_between_pattern_and_strings("AAA", dna))
 
 
+class MedianStringTest(unittest.TestCase):
+    def test_median_string_sample1(self):
+        dna = ["AAATTGACGCAT", "GACGACCACGTT", "CGTCAGCGCCTG", "GCTGAGCACCGG", "AGTACGGGACAG"]
+        self.assertEqual("ACG", median_string(dna, 3))
+
+
 if __name__ == "__main__":
     unittest.main()
